@@ -1,0 +1,36 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - docs/*
+    - README.md
+
+pool:
+  name: Azure Pipelines
+  demands: msbuild
+  vmImage: 'windows-2022'
+
+
+variables:
+  BuildConfiguration: 'Release'
+
+steps:
+
+# Initial Setup
+#- task: UseDotNet@2
+#  displayName: Use .NET 6.0
+#  inputs:
+#    packageType: 'sdk'
+#    version: '6.0.x'
+
+- task: NuGetToolInstaller@1
+  displayName: 'Install NuGet'
+
+# Nugets
+
+- template: publish-nuget.yml
+  parameters:
+    projectName: 'Codexcite.Generators'

@@ -1,0 +1,32 @@
+parameters:
+- name: projectName # name of the parameter; required
+  type: string # data type of the parameter; required
+  # default: false
+
+steps:
+
+- task: DotNetCoreCLI@2
+  displayName: Restore ${{ parameters.projectName }} project
+  inputs:
+    command: 'restore'
+    projects: 'src/${{ parameters.projectName }}/*.csproj'
+    feedsToUse: 'config'
+    includeNuGetOrg: true
+    nugetConfigPath: 'nuget.config'
+    arguments: '--configuration $(BuildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: Build ${{ parameters.projectName }}
+  inputs:
+    command: 'build'
+    projects: 'src/${{ parameters.projectName }}/*.csproj'
+    arguments: '--configuration $(BuildConfiguration)'
+
+- task: NuGetCommand@2
+  displayName: Push ${{ parameters.projectName }} Nuget
+  inputs:
+    command: 'push'
+    packagesToPush: 'src/${{ parameters.projectName }}/bin/$(buildConfiguration)/*.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: 'codexcite'
+    allowPackageConflicts: true

@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <LangVersion>Latest</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <!--<PackageOutputPath>$(ProjectDir)..\..\Nuget\Packages</PackageOutputPath>-->
+    <PackageId>Codexcite.Generators</PackageId>
+    <Company>Codexcite</Company>
+    <Description>Base Generators and helper functions for Source Generators.</Description>
+    <Version>1.1.1</Version>
+    <PackageReleaseNotes>
+      Codexcite.Generators 1.1.1 - Handling System. namespace.
+      Codexcite.Generators 1.1.0 - Better namespace handling. Identifies Enumerables and access modifiers.
+      Codexcite.Generators 1.0.3 - Can use interesting attributes.
+      Codexcite.Generators 1.0.2 - Full type names.
+      Codexcite.Generators 1.0.1 - Handling Enum properties.
+      Codexcite.Generators 1.0.0 - Initial version.
+    </PackageReleaseNotes>
+    <Copyright>Codexcite SA de CV</Copyright>
+  </PropertyGroup>
+
+  <!-- The following libraries include the source generator interfaces and types we need -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>
