@@ -29,3 +29,4 @@ steps:
     packagesToPush: 'src/${{ parameters.projectName }}/bin/$(buildConfiguration)/*.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'nuget.org'
+    allowPackageConflicts: true
