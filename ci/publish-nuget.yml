@@ -28,4 +28,4 @@ steps:
     command: 'push'
     packagesToPush: 'src/${{ parameters.projectName }}/bin/$(buildConfiguration)/*.nupkg'
     nuGetFeedType: external
-    publishFeedCredentials: 'nuget.org svc conn'
+    publishFeedCredentials: 'nuget.org'
