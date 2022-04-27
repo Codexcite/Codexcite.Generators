@@ -27,6 +27,5 @@ steps:
   inputs:
     command: 'push'
     packagesToPush: 'src/${{ parameters.projectName }}/bin/$(buildConfiguration)/*.nupkg'
-    nuGetFeedType: 'internal'
-    publishVstsFeed: 'nuget.org'
-    allowPackageConflicts: true
+    nuGetFeedType: external
+    publishFeedCredentials: 'nuget.org svc conn'
