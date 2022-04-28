@@ -2,6 +2,8 @@
 
 Base Generators and helper functions for Source Generators.
 
+[![NuGet Badge](https://buildstats.info/nuget/Codexcite.Generators)](https://www.nuget.org/packages/Codexcite.Generators/)
+
 ## Usage
 Basic usage - just inherit from BaseTypeGenerator, define the marker attribute to look for and customize the code to be generated for each target type.
 ```csharp
