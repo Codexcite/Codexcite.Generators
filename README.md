@@ -209,6 +209,17 @@ If the analyzer doesn't run on the CI pipeline on Azure DevOps, you can use the 
     <Compile Remove="Generated/**/*.cs" Condition="'$(TF_BUILD)' != 'true'" />
   </ItemGroup>
 ```
+To use your generator, mark the target types with your defined attribute. Exclude members from generation by using your ignore attribute.
+```csharp
+  [SampleMarker]
+  public record Example
+  {
+    public string? Name { get; set; }
+    public int Age { get; set; }
+    [SampleIgnore]
+    public double? Height { get; set; }
+  }
+```
 
 ## Advanced use
 You can inherit directly from *BaseGenerator<TDeclarationSyntax, TToGenerate>* in order to fully customize your source generation.
@@ -240,3 +251,7 @@ protected override string GenerateCodeForType(TToGenerate type)
   // generate the necessary code for the target type 
 }
 ```
+
+## Acknowledgments
+
+Inspired by Andrew Lock's excellent [blog series](https://andrewlock.net/creating-a-source-generator-part-1-creating-an-incremental-source-generator/) about incremental source generators.

@@ -22,7 +22,7 @@ public abstract class BaseGenerator<TDeclarationSyntax, TToGenerate> : IIncremen
                                                                                .Where(static m => m is not null)
                                                                                 !; // filter out attributed enums that we don't care about
 
-    // Combine the selected enums with the `Compilation`
+    // Combine the selected types with the `Compilation`
     IncrementalValueProvider<(Compilation, ImmutableArray<TDeclarationSyntax>)> compilationAndTypes
       = context.CompilationProvider.Combine(enumDeclarations.Collect());
 
