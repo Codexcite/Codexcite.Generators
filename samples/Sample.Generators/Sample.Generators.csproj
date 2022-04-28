@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Source generators must target netstandard 2.0 -->
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <!-- We don't want to reference the source generator dll directly in consuming projects -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <LangVersion>Latest</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <!--<PackageOutputPath>$(ProjectDir)..\..\Nuget\Packages</PackageOutputPath>-->
+    <PackageId>Sample.Generators</PackageId>
+    <Company>Codexcite</Company>
+    <Description>Example of source generators created using Codexcite.Generators package.</Description>
+    <Version>1.0.0</Version>
+    <PackageReleaseNotes>
+    Sample.Generators 1.0.0 - Initial version.
+  </PackageReleaseNotes>
+    <Copyright>Codexcite SA de CV</Copyright>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <!-- The following libraries include the source generator interfaces and types we need -->
+  <ItemGroup>
+    <!--<PackageReference Include="Codexcite.Generators" Version="1.0.0" PrivateAssets="All"/>-->
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" PrivateAssets="all" />
+    <!--<PackageReference Include="Codexcite.Generators" Version="1.1.2" PrivateAssets="all" />-->
+  </ItemGroup>
+
+  <!-- Reference the attributes from the generator to compile against them -->
+  <!-- Ensure we specify PrivateAssets so the NuGet doesn't have any dependencies -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Codexcite.Generators\Codexcite.Generators.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\Sample.Generators.Shared\Sample.Generators.Shared.csproj" PrivateAssets="All" />
+  </ItemGroup>
+
+  <!-- Nuget packing stuff -->
+  <ItemGroup>
+    <!-- Pack the generator dll in the analyzers/dotnet/cs path -->
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+
+    <!-- Pack the referenced dlls in the analyzers/dotnet/cs path - workaround for running analyzer during CI/CD pipeline -->
+    <None Include="$(OutputPath)\Codexcite.Generators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)\Sample.Generators.Shared.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+
+    <!-- Pack the default referenced dlls in the analyzers/dotnet/cs path - workaround for running analyzer during CI/CD pipeline -->
+    <None Include="$(OutputPath)\Microsoft.CodeAnalysis.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)\Microsoft.CodeAnalysis.CSharp.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+
+    <None Include="$(OutputPath)\System.Buffers.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)\System.Collections.Immutable.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)\System.Memory.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)\System.Numerics.Vectors.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)\System.Reflection.Metadata.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)\System.Runtime.CompilerServices.Unsafe.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)\System.Text.Encoding.CodePages.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)\System.Threading.Tasks.Extensions.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+
+    <!-- Also pack the shared dll in the lib\netstandard2.0 path - this allows it to be referenced by the target assembly -->
+    <None Include="$(OutputPath)\Sample.Generators.Shared.dll" Pack="true" PackagePath="lib\netstandard2.0" Visible="true" />
+  </ItemGroup>
+
+</Project>

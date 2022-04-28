@@ -15,10 +15,11 @@
     <RepositoryUrl>https://github.com/Codexcite/Codexcite.Generators</RepositoryUrl>
     <!--<PackageLicenseUrl>https://github.com/Codexcite/Codexcite.Generators/blob/master/LICENSE</PackageLicenseUrl>-->
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageTags>Source Generator, C#, Generator</PackageTags>
+    <PackageTags>SourceGenerator, C#, Generator</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.1.2</Version>
+    <Version>1.1.3</Version>
     <PackageReleaseNotes>
+      Codexcite.Generators 1.1.3 - Refactor TypeInformation models
       Codexcite.Generators 1.1.2 - Update Project Urls
       Codexcite.Generators 1.1.1 - Handling System. namespace.
       Codexcite.Generators 1.1.0 - Better namespace handling. Identifies Enumerables and access modifiers.

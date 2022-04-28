@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Codexcite.Generators.Model;
+using Microsoft.CodeAnalysis;
 
 namespace Codexcite.Generators;
 
@@ -41,7 +42,7 @@ public static class GeneratorHelper
     $"System.{nameof(UInt64)}"
 };
 
-  public static AttributeInfo ExtractAttributeInfo(AttributeData attributeData)
+  public static AttributeInformation ExtractAttributeInfo(AttributeData attributeData)
   {
     var className = attributeData.AttributeClass is null ? string.Empty : GetFullTypeName(attributeData.AttributeClass);
 
@@ -55,14 +56,14 @@ public static class GeneratorHelper
       if (TryGetArgumentValue(attributeData.ConstructorArguments[i], out var value))
         ctorArguments.Add(new KeyValuePair<int, object?>(i, value));
 
-    return new AttributeInfo(className, namedArguments.ToArray(), ctorArguments.ToArray());
+    return new AttributeInformation(className, namedArguments.ToArray(), ctorArguments.ToArray());
   }
 
-  public static AttributeInfo[] ExtractAttributeInfos(IEnumerable<AttributeData> attributes,
+  public static AttributeInformation[] ExtractAttributeInfos(IEnumerable<AttributeData> attributes,
                                                       string[] interestingAttributes,
                                                       bool allAttributes = false)
   {
-    var output = new List<AttributeInfo>();
+    var output = new List<AttributeInformation>();
     foreach (var attributeData in attributes)
     {
       if (attributeData.AttributeClass is null)

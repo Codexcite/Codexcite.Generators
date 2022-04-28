@@ -1,9 +1,10 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Codexcite.Generators.Model;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Codexcite.Generators;
 
-public abstract class BaseTypeGenerator<TToGenerate> : BaseGenerator<TypeDeclarationSyntax, TToGenerate> where TToGenerate : TypeToGenerate, new()
+public abstract class BaseTypeGenerator<TToGenerate> : BaseGenerator<TypeDeclarationSyntax, TToGenerate> where TToGenerate : TypeInformation, new()
 {
   protected override TToGenerate ExtractTypeToGenerate(INamedTypeSymbol typeSymbol)
   {
@@ -12,7 +13,7 @@ public abstract class BaseTypeGenerator<TToGenerate> : BaseGenerator<TypeDeclara
 
     // Get all the members in the type
     var typeMembers = typeSymbol.GetMembers();
-    var members = new List<PropertyToGenerate>(typeMembers.Length);
+    var members = new List<PropertyInformation>(typeMembers.Length);
 
     // Get all the properties from the type
     foreach (var member in typeMembers)
@@ -20,22 +21,29 @@ public abstract class BaseTypeGenerator<TToGenerate> : BaseGenerator<TypeDeclara
       {
         var propertyType = GeneratorHelper.GetFullTypeName(propertySymbol.Type);
         var extracted = GeneratorHelper.ExtractTypeIfNullable(propertySymbol.Type);
-        var isEnumerable = propertySymbol.Type.SpecialType != SpecialType.System_String && propertySymbol.Type.AllInterfaces.Any(x => x.Name == "IEnumerable");
+        var isEnumerable = propertySymbol.Type.SpecialType != SpecialType.System_String &&
+                           propertySymbol.Type.AllInterfaces.Any(x => x.Name == "IEnumerable");
 
-        members.Add(new PropertyToGenerate
+        members.Add(new PropertyInformation
                     {
                       Name = propertySymbol.Name,
-                      Type = propertyType,
-                      TypeWithoutNullable = GeneratorHelper.GetFullTypeName(extracted),
-                      IsNullableAnnotated = propertySymbol.Type.NullableAnnotation == NullableAnnotation.Annotated,
-                      IsEnum = extracted.TypeKind == TypeKind.Enum,
-                      IsNullableT = GeneratorHelper.IsNullableT(propertySymbol.Type),
-                      IsValueType = extracted.IsValueType,
-                      TypeNamespace = GeneratorHelper.GetFullNamespace(propertySymbol.Type.ContainingNamespace),
-                      TypeWithoutNullableNamespace = GeneratorHelper.GetFullNamespace(extracted is IArrayTypeSymbol arrayTypeSymbol? arrayTypeSymbol.ElementType.ContainingNamespace : extracted.ContainingNamespace ),
+                      Type = new ReferencedTypeInformation
+                             {
+                               Type = propertyType,
+                               TypeWithoutNullable = GeneratorHelper.GetFullTypeName(extracted),
+                               IsNullableAnnotated = propertySymbol.Type.NullableAnnotation == NullableAnnotation.Annotated,
+                               IsEnum = extracted.TypeKind == TypeKind.Enum,
+                               IsNullableT = GeneratorHelper.IsNullableT(propertySymbol.Type),
+                               IsValueType = extracted.IsValueType,
+                               TypeNamespace = GeneratorHelper.GetFullNamespace(propertySymbol.Type.ContainingNamespace),
+                               TypeWithoutNullableNamespace =
+                                 GeneratorHelper.GetFullNamespace(extracted is IArrayTypeSymbol arrayTypeSymbol
+                                                                    ? arrayTypeSymbol.ElementType.ContainingNamespace
+                                                                    : extracted.ContainingNamespace),
+                               IsEnumerable = isEnumerable
+                             },
                       Attributes = GeneratorHelper.ExtractAttributeInfos(propertySymbol.GetAttributes(), InterestingAttributes),
-                      IsReadOnly = propertySymbol.IsReadOnly,
-                      IsEnumerable = isEnumerable
+                      IsReadOnly = propertySymbol.IsReadOnly
                     });
       }
 
@@ -50,7 +58,8 @@ public abstract class BaseTypeGenerator<TToGenerate> : BaseGenerator<TypeDeclara
     return typeToGenerate;
   }
 
-  protected override string GetGeneratedFileName(TToGenerate typeToGenerate) => $"{typeToGenerate.Name}Extensions.g.cs";
+  protected override string GetGeneratedFileName(TToGenerate typeToGenerate) 
+    => $"{typeToGenerate.Name}Extensions.g.cs";
 
 
   /// <summary>
